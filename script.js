@@ -1,3 +1,30 @@
+// ===== Typewriter Effect for Hero Title =====
+function typewriterEffect(element, speed = 100) {
+    const text = element.textContent;
+    element.textContent = '';
+    element.style.minHeight = '60px';
+    
+    let i = 0;
+    const type = () => {
+        if (i < text.length) {
+            element.textContent += text.charAt(i);
+            i++;
+            setTimeout(type, speed);
+        }
+    };
+    
+    // Start typewriter effect after a small delay
+    setTimeout(type, 300);
+}
+
+// Initialize typewriter effect on page load
+window.addEventListener('load', () => {
+    const heroTitle = document.querySelector('.hero-title');
+    if (heroTitle) {
+        typewriterEffect(heroTitle, 80);
+    }
+});
+
 // ===== Mobile Menu Toggle =====
 const hamburger = document.querySelector('.hamburger');
 const navMenu = document.querySelector('.nav-menu');
@@ -41,61 +68,7 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// ===== Form Submission =====
-const contactForm = document.getElementById('contactForm');
-if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        // Get form data
-        const formData = new FormData(contactForm);
-        const data = {
-            name: contactForm.querySelector('input[type="text"]').value,
-            email: contactForm.querySelector('input[type="email"]').value,
-            message: contactForm.querySelector('textarea').value
-        };
-
-        // Simple validation
-        if (data.name.trim() && data.email.trim() && data.message.trim()) {
-            // Show success message
-            showNotification('Thank you! Your message has been sent successfully.', 'success');
-            
-            // Reset form
-            contactForm.reset();
-        } else {
-            showNotification('Please fill out all fields.', 'error');
-        }
-    });
-}
-
-// ===== Notification System =====
-function showNotification(message, type) {
-    const notification = document.createElement('div');
-    notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 15px 25px;
-        background-color: ${type === 'success' ? '#10b981' : '#ef4444'};
-        color: white;
-        border-radius: 8px;
-        font-weight: 500;
-        z-index: 1000;
-        animation: slideInRight 0.3s ease-out;
-    `;
-    notification.textContent = message;
-    document.body.appendChild(notification);
-
-    // Auto remove notification
-    setTimeout(() => {
-        notification.style.animation = 'slideInLeft 0.3s ease-out';
-        setTimeout(() => {
-            notification.remove();
-        }, 300);
-    }, 3000);
-}
-
-// ===== Animation on Scroll =====
+// ===== Smooth Scrolling =====
 const observerOptions = {
     threshold: 0.1,
     rootMargin: '0px 0px -100px 0px'
@@ -144,6 +117,127 @@ window.addEventListener('scroll', () => {
             item.style.color = 'var(--text-dark)';
         }
     });
+});
+
+// ===== Section Fade-In Animation on Scroll =====
+const sectionObserverOptions = {
+    threshold: 0.15,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const sectionObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            // Add fade-in animation to section
+            entry.target.style.opacity = '0';
+            entry.target.style.transform = 'translateY(30px)';
+            
+            // Trigger animation with slight delay
+            setTimeout(() => {
+                entry.target.classList.add('fade-in-up');
+            }, 50);
+            
+            sectionObserver.unobserve(entry.target);
+        }
+    });
+}, sectionObserverOptions);
+
+// Observe all sections
+document.querySelectorAll('section').forEach(section => {
+    section.style.transition = 'opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)';
+    sectionObserver.observe(section);
+});
+
+// ===== Staggered Card Animation =====
+const cardObserverOptions = {
+    threshold: 0.15,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const cardObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            const cards = entry.target.querySelectorAll('.project-card, .skill-item');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                card.style.transition = `opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s, transform 0.6s cubic-bezier(0.4, 0, 0.2, 1) ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 50 + (index * 100));
+            });
+            cardObserver.unobserve(entry.target);
+        }
+    });
+}, cardObserverOptions);
+
+// Observe grid containers
+document.querySelectorAll('.projects-grid, .skills-grid').forEach(grid => {
+    cardObserver.observe(grid);
+});
+
+// ===== Text Content Animation =====
+const textObserverOptions = {
+    threshold: 0.15,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const textObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            // Animate about text paragraphs
+            const aboutTexts = entry.target.querySelectorAll('.about-text p');
+            aboutTexts.forEach((text, index) => {
+                setTimeout(() => {
+                    text.classList.add('animate');
+                }, index * 150);
+            });
+            
+            // Animate contact subtitle
+            const contactSubtitle = entry.target.querySelector('.contact-subtitle');
+            if (contactSubtitle) {
+                setTimeout(() => {
+                    contactSubtitle.classList.add('animate');
+                }, 100);
+            }
+            
+            textObserver.unobserve(entry.target);
+        }
+    });
+}, textObserverOptions);
+
+// Observe about and contact sections
+document.querySelectorAll('.about-content, .contact').forEach(el => {
+    textObserver.observe(el);
+});
+
+// ===== Section Title Animation =====
+const titleObserverOptions = {
+    threshold: 0.3,
+    rootMargin: '0px 0px -50px 0px'
+};
+
+const titleObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            const title = entry.target.querySelector('.section-title');
+            if (title && !title.classList.contains('animate')) {
+                setTimeout(() => {
+                    title.classList.add('animate');
+                }, 100);
+            }
+            titleObserver.unobserve(entry.target);
+        }
+    });
+}, titleObserverOptions);
+
+// Observe all sections for title animation
+document.querySelectorAll('section').forEach(section => {
+    if (section.id !== 'home') { // Skip hero section
+        titleObserver.observe(section);
+    }
 });
 
 // ===== Utility Function: Debounce =====

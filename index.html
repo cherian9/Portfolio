@@ -39,11 +39,11 @@
     </nav>
 
     <!-- Hero Section -->
-    <section id="home" class="hero">
+    <section id="home" class="hero vanta-background">
         <div class="hero-content">
-            <h1 class="hero-title">Welcome to My Portfolio</h1>
-            <p class="hero-subtitle">Full Stack Developer | Creative Problem Solver</p>
-            <button class="cta-button" onclick="document.getElementById('projects').scrollIntoView({behavior: 'smooth'})">View My Work</button>
+            <h1 class="hero-title">Hi, I am Cherian.</h1>
+            <p class="hero-subtitle"> Developer | Problem Solver | Learner</p>
+            <a href="Cherian_Resume.pdf" download="Cherian_Resume.pdf" class="cta-button">View My Resume</a>
         </div>
     </section>
 
@@ -54,11 +54,10 @@
             <div class="about-content">
                 <div class="about-text">
                     <p>
-                        Hi! I'm a passionate developer dedicated to creating beautiful, functional, and user-friendly web applications.
-                        With expertise in modern web technologies, I transform ideas into impactful digital solutions.
+                       I’m a software developer with a strong interest in building intelligent, real-world solutions using AI and modern technologies.My focus lies in building practical solutions that effectively meet real user needs.
                     </p>
                     <p>
-                        I love learning new technologies and staying updated with industry trends. My goal is to build websites that not only look great but also provide excellent user experiences.
+                        I’m comfortable working with multiple programming languages and technologies, and I’m always looking to learn and improve.
                     </p>
                 </div>
             </div>
@@ -72,51 +71,52 @@
             <div class="projects-grid">
                 <div class="project-card">
                     <div class="project-image">
-                        <div class="placeholder-image">Project 1</div>
+                        <img src="healthsnap.png" alt="HealthSnap Project" class="project-img">
                     </div>
                     <div class="project-info">
-                        <h3 class="project-title">E-Commerce Platform</h3>
+                        <h3 class="project-title">HealthSnap</h3>
                         <p class="project-description">
-                            A full-featured e-commerce application built with modern web technologies.
+                            An intelligent food analysis tool that assists users in making healthier purchasing decisions by providing real-time label scanning, personalized insights, and intelligent recommendations.
                         </p>
                         <div class="project-tags">
                             <span class="tag">React</span>
-                            <span class="tag">Node.js</span>
-                            <span class="tag">MongoDB</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="project-card">
-                    <div class="project-image">
-                        <div class="placeholder-image">Project 2</div>
-                    </div>
-                    <div class="project-info">
-                        <h3 class="project-title">Task Management App</h3>
-                        <p class="project-description">
-                            A collaborative task management tool to organize and track projects efficiently.
-                        </p>
-                        <div class="project-tags">
-                            <span class="tag">Vue.js</span>
-                            <span class="tag">Firebase</span>
                             <span class="tag">CSS</span>
+                            <span class="tag">HTML</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="project-card">
                     <div class="project-image">
-                        <div class="placeholder-image">Project 3</div>
+                        <img src="smartjar.png" alt="SmartJar Project" class="project-img">
                     </div>
                     <div class="project-info">
-                        <h3 class="project-title">Weather Dashboard</h3>
+                        <h3 class="project-title">SmartJar</h3>
                         <p class="project-description">
-                            Real-time weather information with beautiful visualizations and forecasts.
+                            A cloud-connected IoT solution leveraging ESP32, load cells, and AWS IoT Core to automate ingredient tracking, provide real-time insights, and trigger low-stock alerts.
                         </p>
                         <div class="project-tags">
-                            <span class="tag">JavaScript</span>
-                            <span class="tag">API</span>
-                            <span class="tag">HTML/CSS</span>
+                            <span class="tag">Javascript</span>
+                            <span class="tag">Firebase</span>
+                            <span class="tag">IoT</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-image">
+                        <img src="solaro.jpg" alt="Solaro Project" class="project-img">
+                    </div>
+                    <div class="project-info">
+                        <h3 class="project-title">Solaro</h3>
+                        <p class="project-description">
+                            An intelligent solar panel optimization system that optimizes energy output by automating cleansing, cooling, and real-time performance monitoring through the use of AI and IoT.
+
+                        </p>
+                        <div class="project-tags">
+                            <span class="tag">React</span>
+                            <span class="tag">AWS</span>
+                            <span class="tag">MongoDB</span>
                         </div>
                     </div>
                 </div>
@@ -136,7 +136,6 @@
                         <li>CSS3</li>
                         <li>JavaScript</li>
                         <li>React</li>
-                        <li>Vue.js</li>
                     </ul>
                 </div>
 
@@ -145,8 +144,6 @@
                     <ul class="skill-list">
                         <li>Node.js</li>
                         <li>Python</li>
-                        <li>MongoDB</li>
-                        <li>PostgreSQL</li>
                         <li>REST APIs</li>
                     </ul>
                 </div>
@@ -155,9 +152,7 @@
                     <h3 class="skill-title">Tools & Others</h3>
                     <ul class="skill-list">
                         <li>Git & GitHub</li>
-                        <li>Docker</li>
                         <li>AWS</li>
-                        <li>Figma</li>
                         <li>Firebase</li>
                     </ul>
                 </div>
@@ -169,25 +164,12 @@
     <section id="contact" class="contact">
         <div class="container">
             <h2 class="section-title">Get In Touch</h2>
-            <p class="contact-subtitle">I'd love to hear from you. Let's connect!</p>
+            <p class="contact-subtitle">Let's connect!</p>
             <div class="contact-content">
-                <form class="contact-form" id="contactForm">
-                    <div class="form-group">
-                        <input type="text" placeholder="Your Name" required>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" placeholder="Your Email" required>
-                    </div>
-                    <div class="form-group">
-                        <textarea placeholder="Your Message" rows="5" required></textarea>
-                    </div>
-                    <button type="submit" class="submit-button">Send Message</button>
-                </form>
                 <div class="contact-links">
-                    <a href="mailto:your.email@example.com" class="contact-link">Email</a>
-                    <a href="https://linkedin.com" target="_blank" class="contact-link">LinkedIn</a>
-                    <a href="https://github.com" target="_blank" class="contact-link">GitHub</a>
-                    <a href="https://twitter.com" target="_blank" class="contact-link">Twitter</a>
+                    <a href="https://mail.google.com/mail/u/0/?view=cm&fs=1&to=c7cherianjoseph@gmail.com" target="_blank" class="contact-link email-link"></a>
+                    <a href="https://www.linkedin.com/in/cheriancj/" target="_blank" class="contact-link">LinkedIn</a>
+                    <a href="https://github.com/cherian9" target="_blank" class="contact-link">GitHub</a>
                 </div>
             </div>
         </div>
@@ -201,5 +183,23 @@
     </footer>
 
     <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vanta/0.5.24/vanta.topology.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            VANTA.TOPOLOGY({
+                el: "#home",
+                mouseControls: true,
+                touchControls: true,
+                gyroControls: false,
+                minHeight: 200.00,
+                minWidth: 200.00,
+                scale: 1.00,
+                scaleMobile: 0.5,
+                color: 0x3b82f6,
+                backgroundColor: 0x0f172a
+            });
+        });
+    </script>
 </body>
 </html>
