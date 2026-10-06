@@ -2,37 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Resume | Cherian Chirackal Joseph</title>
     <meta name="description" content="View and download the resume of Cherian Chirackal Joseph — Developer, Problem Solver, and Learner.">
     <link rel="stylesheet" href="styles.css">
     <style>
-        /* ===== Resume Page Styles ===== */
-        .resume-page {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+        html:has(body.resume-page) {
+            scroll-snap-type: none;
         }
 
-        /* PDF Viewer Container */
+        .resume-page {
+            min-height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
         .resume-viewer {
             flex: 1;
             display: flex;
             flex-direction: column;
+            min-height: 0;
             background: linear-gradient(135deg, #f8fafc 0%, #f0f9ff 100%);
             padding: 0;
         }
 
         .pdf-container {
             flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
             max-width: 1000px;
             width: 100%;
             margin: 0 auto;
-            padding: 30px 20px 40px;
-            animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) both;
+            padding: 20px 20px 24px;
         }
 
         .pdf-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
             background: #ffffff;
             border-radius: 16px;
             box-shadow:
@@ -46,118 +56,286 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 20px;
+            gap: 10px;
+            padding: 10px 16px;
             background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            flex-shrink: 0;
         }
 
         .pdf-toolbar-title {
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85);
             font-size: 13px;
             font-weight: 500;
             display: flex;
             align-items: center;
             gap: 8px;
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
         .pdf-toolbar-title svg {
             width: 16px;
             height: 16px;
             opacity: 0.7;
+            flex-shrink: 0;
         }
 
         .pdf-toolbar-actions {
             display: flex;
+            align-items: center;
             gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .zoom-controls {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 2px;
         }
 
         .toolbar-btn {
             display: inline-flex;
             align-items: center;
+            justify-content: center;
             gap: 6px;
-            padding: 8px 16px;
+            padding: 8px 14px;
+            min-height: 40px;
             border-radius: 8px;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 600;
             text-decoration: none;
-            transition: all 0.2s ease;
+            transition: background 0.2s ease, transform 0.15s ease;
             cursor: pointer;
             border: none;
             font-family: inherit;
             color: #ffffff;
             background: rgba(255, 255, 255, 0.1);
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .toolbar-btn:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .toolbar-btn:hover,
+        .toolbar-btn:focus-visible {
+            background: rgba(255, 255, 255, 0.22);
+            outline: none;
+        }
+
+        .toolbar-btn:active {
+            transform: scale(0.97);
         }
 
         .toolbar-btn svg {
-            width: 14px;
-            height: 14px;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
         }
 
-        .pdf-frame {
-            width: 100%;
-            height: calc(100vh - 70px - 56px - 40px);
-            min-height: 500px;
-            border: none;
+        .toolbar-btn.icon-only {
+            width: 40px;
+            padding: 8px;
+        }
+
+        .toolbar-btn.download-btn {
+            background: #3b82f6;
+        }
+
+        .toolbar-btn.download-btn:hover,
+        .toolbar-btn.download-btn:focus-visible {
+            background: #2563eb;
+        }
+
+        .zoom-label {
+            min-width: 44px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 12px;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .pdf-stage {
+            flex: 1;
+            min-height: 0;
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
+            background: #e8eef5;
+            position: relative;
+            touch-action: pan-x pan-y pinch-zoom;
+        }
+
+        .pdf-pages {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 12px 28px;
+            min-height: 100%;
+        }
+
+        .pdf-page {
+            background: #fff;
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+            line-height: 0;
+            flex-shrink: 0;
+        }
+
+        .pdf-page canvas {
             display: block;
+            width: 100%;
+            height: auto;
         }
 
-        /* Responsive — fill the screen on mobile */
+        .pdf-status {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 24px;
+            text-align: center;
+            color: #475569;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .pdf-status.hidden {
+            display: none;
+        }
+
+        .pdf-spinner {
+            width: 36px;
+            height: 36px;
+            border: 3px solid #cbd5e1;
+            border-top-color: #3b82f6;
+            border-radius: 50%;
+            animation: pdf-spin 0.8s linear infinite;
+        }
+
+        @keyframes pdf-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .mobile-download-bar {
+            display: none;
+        }
+
+        .resume-page .footer {
+            padding: 18px 20px;
+            font-size: 13px;
+        }
+
         @media (max-width: 768px) {
+            .resume-page .nav-logo a {
+                font-size: 16px;
+                max-width: calc(100vw - 80px);
+                display: inline-block;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .resume-viewer {
+                padding: 0;
+            }
+
             .pdf-container {
-                padding: 8px;
+                padding: 0;
                 max-width: 100%;
             }
 
             .pdf-wrapper {
-                border-radius: 10px;
-            }
-
-            .pdf-frame {
-                height: calc(100vh - 70px - 50px - 16px);
-                min-height: 400px;
-            }
-
-            .pdf-toolbar {
-                padding: 10px 12px;
-                gap: 8px;
-            }
-
-            .pdf-toolbar-title {
-                font-size: 12px;
-            }
-
-            .toolbar-btn {
-                padding: 6px 10px;
-                font-size: 11px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .pdf-container {
-                padding: 4px;
-            }
-
-            .pdf-wrapper {
-                border-radius: 8px;
-            }
-
-            .pdf-frame {
-                height: calc(100vh - 70px - 46px - 8px);
-                min-height: 350px;
+                border-radius: 0;
+                box-shadow: none;
             }
 
             .pdf-toolbar {
                 padding: 8px 10px;
+                gap: 8px;
+            }
+
+            .pdf-toolbar-title {
+                display: none;
+            }
+
+            .pdf-toolbar-actions {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .zoom-controls {
+                flex-shrink: 0;
+            }
+
+            .pdf-toolbar .download-btn {
+                display: none;
+            }
+
+            .pdf-pages {
+                padding: 8px 8px 88px;
+                gap: 8px;
+            }
+
+            .mobile-download-bar {
+                display: flex;
+                position: sticky;
+                bottom: 0;
+                z-index: 20;
+                padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+                background: rgba(255, 255, 255, 0.92);
+                backdrop-filter: blur(12px);
+                border-top: 1px solid #e2e8f0;
+                gap: 10px;
+            }
+
+            .mobile-download-bar a,
+            .mobile-download-bar button {
+                flex: 1;
+                min-width: 0;
+                min-height: 48px;
+                border-radius: 12px;
+                font-size: 15px;
+                font-weight: 700;
+                font-family: inherit;
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+                text-decoration: none;
+                border: none;
+                cursor: pointer;
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .mobile-download-bar .primary {
+                background: #3b82f6;
+                color: #fff;
+            }
+
+            .mobile-download-bar .secondary {
+                background: #f1f5f9;
+                color: #1e293b;
+                border: 1px solid #e2e8f0;
+            }
+
+            .mobile-download-bar svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            .resume-page .footer {
+                display: none;
             }
         }
     </style>
 </head>
 <body class="resume-page">
-    <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
             <div class="nav-logo">
@@ -194,43 +372,58 @@
         </div>
     </nav>
 
-
-
-    <!-- PDF Viewer -->
     <section class="resume-viewer">
         <div class="pdf-container">
             <div class="pdf-wrapper">
                 <div class="pdf-toolbar">
                     <div class="pdf-toolbar-title">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                        Cherian-resume.pdf
+                        <span>Cherian-resume.pdf</span>
                     </div>
                     <div class="pdf-toolbar-actions">
-                        <button onclick="downloadResume()" class="toolbar-btn" id="toolbar-download-btn">
+                        <div class="zoom-controls">
+                            <button type="button" class="toolbar-btn icon-only" id="zoom-out" aria-label="Zoom out">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                            </button>
+                            <span class="zoom-label" id="zoom-label">100%</span>
+                            <button type="button" class="toolbar-btn icon-only" id="zoom-in" aria-label="Zoom in">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+                            </button>
+                        </div>
+                        <a href="Cherian-resume.pdf" download="Cherian-resume.pdf" class="toolbar-btn download-btn" id="toolbar-download-btn">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
                             Download
-                        </button>
-                        <a href="Cherian-resume.pdf" target="_blank" class="toolbar-btn" id="toolbar-open-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-                            Open
                         </a>
                     </div>
                 </div>
-                <iframe src="Cherian-resume.pdf" class="pdf-frame" title="Cherian Chirackal Joseph Resume"></iframe>
 
+                <div class="pdf-stage" id="pdf-stage">
+                    <div class="pdf-status" id="pdf-status">
+                        <div class="pdf-spinner" aria-hidden="true"></div>
+                        <p>Loading resume…</p>
+                    </div>
+                    <div class="pdf-pages" id="pdf-pages"></div>
+                </div>
+
+                <div class="mobile-download-bar">
+                    <a href="Cherian-resume.pdf" class="secondary" target="_blank" rel="noopener">Open PDF</a>
+                    <a href="Cherian-resume.pdf" download="Cherian-resume.pdf" class="primary" id="mobile-download-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                        Download
+                    </a>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
     <footer class="footer">
         <div class="container">
             <p>&copy; 2025 Cherian Chirackal Joseph. All rights reserved.</p>
         </div>
     </footer>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
     <script>
-        // Hamburger menu toggle for resume page
         const hamburger = document.getElementById('hamburger-resume');
         const navMenu = document.querySelector('.nav-menu');
 
@@ -241,7 +434,6 @@
             });
         }
 
-        // Close menu when clicking a nav link
         document.querySelectorAll('.nav-link').forEach(link => {
             link.addEventListener('click', () => {
                 hamburger.classList.remove('active');
@@ -249,25 +441,148 @@
             });
         });
 
-        // Reliable download function that works on all devices including mobile
-        function downloadResume() {
-            fetch('Cherian-resume.pdf')
-                .then(response => response.blob())
-                .then(blob => {
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.href = url;
-                    a.download = 'Cherian-resume.pdf';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    window.URL.revokeObjectURL(url);
-                })
-                .catch(() => {
-                    // Fallback: open in new tab if fetch fails
-                    window.open('Cherian-resume.pdf', '_blank');
-                });
+        const PDF_URL = 'Cherian-resume.pdf';
+
+        async function downloadResume(event) {
+            if (event) event.preventDefault();
+            try {
+                const response = await fetch(PDF_URL);
+                if (!response.ok) throw new Error('Download failed');
+                const blob = await response.blob();
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'Cherian-resume.pdf';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+            } catch (err) {
+                window.location.href = PDF_URL;
+            }
         }
+
+        document.getElementById('toolbar-download-btn').addEventListener('click', downloadResume);
+        document.getElementById('mobile-download-btn').addEventListener('click', downloadResume);
+
+        const stage = document.getElementById('pdf-stage');
+        const pagesEl = document.getElementById('pdf-pages');
+        const statusEl = document.getElementById('pdf-status');
+        const zoomLabel = document.getElementById('zoom-label');
+        const MIN_ZOOM = 0.75;
+        const MAX_ZOOM = 2.5;
+        const ZOOM_STEP = 0.25;
+
+        let pdfDoc = null;
+        let zoom = 1;
+        let renderToken = 0;
+        let renderTimer = null;
+
+        function setStatus(message, showSpinner) {
+            statusEl.classList.remove('hidden');
+            statusEl.innerHTML = (showSpinner ? '<div class="pdf-spinner" aria-hidden="true"></div>' : '') +
+                '<p>' + message + '</p>';
+        }
+
+        function hideStatus() {
+            statusEl.classList.add('hidden');
+        }
+
+        function pageWidth() {
+            const styles = getComputedStyle(pagesEl);
+            const pad = parseFloat(styles.paddingLeft) + parseFloat(styles.paddingRight);
+            return Math.max(280, stage.clientWidth - pad);
+        }
+
+        async function renderPages() {
+            if (!pdfDoc) return;
+            const token = ++renderToken;
+            const width = pageWidth();
+            pagesEl.innerHTML = '';
+
+            for (let i = 1; i <= pdfDoc.numPages; i++) {
+                if (token !== renderToken) return;
+                const page = await pdfDoc.getPage(i);
+                const unscaled = page.getViewport({ scale: 1 });
+                const fitScale = width / unscaled.width;
+                const viewport = page.getViewport({ scale: fitScale * zoom });
+                const outputScale = Math.min(window.devicePixelRatio || 1, 2);
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'pdf-page';
+                wrapper.style.width = Math.round(viewport.width) + 'px';
+
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d', { alpha: false });
+                canvas.width = Math.floor(viewport.width * outputScale);
+                canvas.height = Math.floor(viewport.height * outputScale);
+                canvas.style.width = '100%';
+                canvas.style.height = 'auto';
+
+                wrapper.appendChild(canvas);
+                pagesEl.appendChild(wrapper);
+
+                const transform = outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+                await page.render({ canvasContext: ctx, viewport, transform }).promise;
+            }
+
+            if (token === renderToken) hideStatus();
+        }
+
+        function scheduleRender() {
+            clearTimeout(renderTimer);
+            renderTimer = setTimeout(renderPages, 80);
+        }
+
+        function setZoom(next) {
+            zoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, Math.round(next * 100) / 100));
+            zoomLabel.textContent = Math.round(zoom * 100) + '%';
+            scheduleRender();
+        }
+
+        document.getElementById('zoom-in').addEventListener('click', () => setZoom(zoom + ZOOM_STEP));
+        document.getElementById('zoom-out').addEventListener('click', () => setZoom(zoom - ZOOM_STEP));
+
+        let pinchStart = 0;
+        let pinchZoom = 1;
+        stage.addEventListener('touchstart', (e) => {
+            if (e.touches.length === 2) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                pinchStart = Math.hypot(dx, dy);
+                pinchZoom = zoom;
+            }
+        }, { passive: true });
+
+        stage.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2 && pinchStart) {
+                const dx = e.touches[0].clientX - e.touches[1].clientX;
+                const dy = e.touches[0].clientY - e.touches[1].clientY;
+                setZoom(pinchZoom * (Math.hypot(dx, dy) / pinchStart));
+            }
+        }, { passive: true });
+
+        window.addEventListener('resize', scheduleRender);
+        window.addEventListener('orientationchange', () => setTimeout(scheduleRender, 200));
+
+        async function loadPdf() {
+            if (typeof pdfjsLib === 'undefined') {
+                setStatus('Could not load the viewer. Use Download to save the resume.', false);
+                return;
+            }
+
+            pdfjsLib.GlobalWorkerOptions.workerSrc =
+                'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+            try {
+                pdfDoc = await pdfjsLib.getDocument(PDF_URL).promise;
+                await renderPages();
+            } catch (err) {
+                setStatus('The resume could not be previewed here. Tap Download to open the file.', false);
+            }
+        }
+
+        loadPdf();
     </script>
 </body>
 </html>
